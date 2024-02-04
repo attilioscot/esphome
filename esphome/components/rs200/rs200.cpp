@@ -153,6 +153,15 @@ void RS200Component::process_line_() {
           double rain_percent = static_cast<double>(round(static_cast<double>(data)* 33.33));
           rain_->publish_state(rain_percent);
         }
+        #ifdef USE_BINARY_SENSOR
+        if (this->raining_sensor_ != nullptr) {
+          if (data > 0 && !this->raining_)
+            this->raining_sensor_->publish_state(true);
+          else if (data == 0 && this->raining_)
+            this->raining_sensor_->publish_state(false);
+          this->raining_ = data > 0;
+        }
+        #endif
         break;
       }
       case 2:  ESP_LOGD(TAG, "sensor status: %d", data); break;

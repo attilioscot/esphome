@@ -19,6 +19,7 @@ class RS200Component : public PollingComponent, public uart::UARTDevice {
   void set_realtime_rain(sensor::Sensor *realtime_rain) { realtime_rain_ = realtime_rain; }
 #ifdef USE_BINARY_SENSOR
   void set_lens_bad_sensor(binary_sensor::BinarySensor *sensor) { this->lens_bad_sensor_ = sensor; }
+  void set_raining_sensor(binary_sensor::BinarySensor *sensor) { this->raining_sensor_ = sensor; }
 #endif
   void set_request_temperature(bool b) { request_temperature_ = b; }
 
@@ -46,9 +47,8 @@ class RS200Component : public PollingComponent, public uart::UARTDevice {
   sensor::Sensor *rain_{nullptr};
   sensor::Sensor *realtime_rain_{nullptr};
 #ifdef USE_BINARY_SENSOR
-  binary_sensor::BinarySensor *too_cold_sensor_{nullptr};
   binary_sensor::BinarySensor *lens_bad_sensor_{nullptr};
-  binary_sensor::BinarySensor *em_sat_sensor_{nullptr};
+  binary_sensor::BinarySensor *raining_sensor_{nullptr};
 #endif
 
   int16_t boot_count_ = 0;
@@ -58,9 +58,8 @@ class RS200Component : public PollingComponent, public uart::UARTDevice {
   uint8_t buffer_[5];
   int16_t bytes_received = 0;
   std::string sw_version_ = "";
-  bool too_cold_ = false;
+  bool raining_ = false;
   bool lens_bad_ = false;
-  bool em_sat_ = false;
   bool request_temperature_ = false;
   bool disable_led_ = false;
 };
