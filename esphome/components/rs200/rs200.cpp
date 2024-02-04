@@ -42,6 +42,9 @@ void RS200Component::send_settings() {
   this->set_value(3, 0);
   // rainfall reporting every n x 50ms
   this->set_value(5,0);
+  #ifdef USE_BINARY_SENSOR
+  this->raining_sensor_->publish_state(this->raining_);
+  #endif
 }
 
 void RS200Component::loop() {
@@ -155,10 +158,8 @@ void RS200Component::process_line_() {
         }
         #ifdef USE_BINARY_SENSOR
         if (this->raining_sensor_ != nullptr) {
-          if (data > 0 && !this->raining_)
-            this->raining_sensor_->publish_state(true);
-          else if (data == 0 && this->raining_)
-            this->raining_sensor_->publish_state(false);
+          if ((data > 0) != this->raining_)
+            this->raining_sensor_->publish_state(data > 0);
           this->raining_ = data > 0;
         }
         #endif
